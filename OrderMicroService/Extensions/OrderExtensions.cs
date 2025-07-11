@@ -1,8 +1,9 @@
 ﻿using DogService;
-using OrderService.Entities;
 using Google.Protobuf.WellKnownTypes;
+using OrderMicroService.Entities;
+using OrderService;
 
-namespace OrderService.Extensions;
+namespace OrderMicroService.Extensions;
 
 public static class OrderExtensions
 {

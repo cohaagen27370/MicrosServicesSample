@@ -1,8 +1,8 @@
-﻿using DogService.Context;
-using DogService.Entities;
+﻿using DogMicroService.Context;
+using DogMicroService.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogService.Repositories;
+namespace DogMicroService.Repositories;
 
 public class DogDbRepository(DogContext context) : IDogDbRepository
 {

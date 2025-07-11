@@ -1,7 +1,7 @@
-﻿using DogService.Entities;
+﻿using DogMicroService.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogService.Context;
+namespace DogMicroService.Context;
 
 public class DogContext(DbContextOptions<DogContext> options) : DbContext(options)
 {

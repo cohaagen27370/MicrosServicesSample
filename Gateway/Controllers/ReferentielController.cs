@@ -1,22 +1,20 @@
 ﻿using DogService;
+using Gateway.Extensions;
+using Gateway.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Controllers;
 
 [ApiController]
-[Route("Referentiel")]
-public class DogController(DogService.DogService.DogServiceClient grpcClient) : ControllerBase
+[Route("[controller]/Dogs")]
+public class ReferentielController(IDogRepository dogRepository) : ControllerBase
 {
-    private readonly DogService.DogService.DogServiceClient _grpcClient = grpcClient;
-
-    [HttpGet("Dogs")]
-    public async Task<IActionResult> GetAllDogs()
+    [HttpGet("{dogId:guid}")]
+    public IActionResult GetOneDog([FromRoute] Guid dogId)
     {
         try
         {
-            var request = new ListDogsRequest();
-            var response = await _grpcClient.ListDogsAsync(request);
-            return Ok(response.Dogs);
+            return Ok(dogRepository.GetOneDogAsync(dogId).ToDogDto());
         }
         catch (Grpc.Core.RpcException ex)
         {
@@ -28,5 +26,61 @@ public class DogController(DogService.DogService.DogServiceClient grpcClient) : 
         }
     }
     
+    [HttpGet("")]
+    public async Task<IActionResult> GetAllDogs()
+    {
+        try
+        {
+            return Ok((await dogRepository.GetAllDogsAsync()).Select(x => x.ToDogDto()));
+        }
+        catch (Grpc.Core.RpcException ex)
+        {
+            return StatusCode(503, $"Erreur lors de l'appel gRPC: {ex.StatusCode} - {ex.Status.Detail}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erreur inattendue: {ex.Message}");
+        }
+    }
+    
+    [HttpPost("")]
+    public async Task<IActionResult> AddDog([FromBody] Dog dog)
+    {
+        try
+        {
+            return Ok(await dogRepository.AddDog(dog));
+        }
+        catch (Grpc.Core.RpcException ex)
+        {
+            return StatusCode(500, $"Erreur inattendue: {ex.Message}"); 
+        }
+    }
+
+    [HttpPut("{dogId:guid}")]
+    public async Task<IActionResult> UpdateDog([FromRoute] Guid dogId, [FromBody] Dog dog)
+    {
+        try
+        {
+            return Ok(await dogRepository.UpdateDog(dogId, dog));
+        }
+        catch (Grpc.Core.RpcException ex)
+        {
+            return StatusCode(500, $"Erreur inattendue: {ex.Message}"); 
+        }
+    }
+    
+    [HttpDelete("{dogId:guid}")]
+    public async Task<IActionResult> DeleteDog(Guid dogId)
+    {
+        try
+        {
+            await dogRepository.DeleteDog(dogId);
+            return NoContent();
+        }
+        catch (Grpc.Core.RpcException ex)
+        {
+            return StatusCode(500, $"Erreur inattendue: {ex.Message}"); 
+        }        
+    }
     
 }

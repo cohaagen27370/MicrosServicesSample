@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package dog_service;
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
 message Dog {
@@ -48,7 +47,7 @@ message ListDogsResponse {
 }
 
 
-service DogService {
+service DogGrpcService {
   rpc AddDog (AddDogRequest) returns (DogResponse);
   rpc UpdateDog (UpdateDogRequest) returns (DogResponse);
   rpc DeleteDog (DeleteDogRequest) returns (DogResponse);

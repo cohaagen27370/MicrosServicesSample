@@ -1,6 +1,52 @@
 ﻿@page "/Dogs"
+@using CommonDto.Models
+@using Front.Services
+@inject DataService DataService
+
 <h3>Dogs</h3>
+
+<RadzenStack Gap="1rem">
+    <RadzenCard Variant="Variant.Outlined">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1.5rem;" Wrap="FlexWrap.Wrap">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem;">
+                <RadzenLabel Text="Logical filter operator:" Component="operator" />
+                <RadzenDropDown @bind-Value="@logicalFilterOperator" TextProperty="Text" ValueProperty="Value" Name="operator" Change=@(args => grid.Reload())
+                                Data="@(Enum.GetValues(typeof(LogicalFilterOperator)).Cast<LogicalFilterOperator>().Select(t => new { Text = $"{t}", Value = t }))" />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem;">
+                <RadzenLabel Text="Filter case sensitivity:" Component="caseSensitivity" />
+                <RadzenDropDown @bind-Value="@filterCaseSensitivity" TextProperty="Text" ValueProperty="Value" Name="caseSensitivity" Change=@(args => grid.Reload())
+                                Data="@(Enum.GetValues(typeof(FilterCaseSensitivity)).Cast<FilterCaseSensitivity>().Select(t => new { Text = $"{t}", Value = t }))" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenCard>
+
+    <RadzenDataGrid @ref=grid AllowFiltering="true" AllowColumnResize="true" 
+        FilterMode="FilterMode.Simple" PageSize="5" AllowPaging="true" AllowSorting="true" Data="@dogs" ColumnWidth="300px"
+        FilterCaseSensitivity="@filterCaseSensitivity" LogicalFilterOperator="@logicalFilterOperator">
+        <Columns>
+            <RadzenDataGridColumn Property="id" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Property="name" Title="Nom" />
+            <RadzenDataGridColumn Property="breed" Title="Race" Width="150px"/>
+            <RadzenDataGridColumn Property="age" Title="Age" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
 
 @code {
     
+    RadzenDataGrid<DogDto> grid;
+    
+    LogicalFilterOperator logicalFilterOperator = LogicalFilterOperator.And;
+    FilterCaseSensitivity filterCaseSensitivity = FilterCaseSensitivity.CaseInsensitive;
+
+    IEnumerable<DogDto>? dogs = null;  
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        dogs = await DataService.GetAllDogs();
+    }
 }

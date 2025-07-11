@@ -1,6 +1,6 @@
-﻿using DogService.Entities;
+﻿using DogMicroService.Entities;
 
-namespace DogService.Repositories;
+namespace DogMicroService.Repositories;
 
 public interface IDogDbRepository
 {

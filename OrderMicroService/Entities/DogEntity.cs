@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OrderService.Entities;
+namespace OrderMicroService.Entities;
 
 public class DogEntity
 {

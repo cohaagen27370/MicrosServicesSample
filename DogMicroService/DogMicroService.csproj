@@ -8,12 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\dog.proto" GrpcServices="Both" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
-        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.18" />
         <PackageReference Include="Serilog" Version="4.3.0" />

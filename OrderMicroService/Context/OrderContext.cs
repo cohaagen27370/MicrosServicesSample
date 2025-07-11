@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OrderService.Entities;
+using OrderMicroService.Entities;
 
-namespace OrderService.Context;
+namespace OrderMicroService.Context;
 
 public class OrderContext(DbContextOptions<OrderContext> options) : DbContext(options)
 {

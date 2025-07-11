@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DogService.Entities;
+namespace DogMicroService.Entities;
 
 public class DogEntity
 {

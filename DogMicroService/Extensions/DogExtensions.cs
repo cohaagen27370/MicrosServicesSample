@@ -1,6 +1,8 @@
-﻿using DogService.Entities;
+﻿using DogMicroService.Entities;
+using DogService;
 
-namespace DogService.Extensions;
+
+namespace DogMicroService.Extensions;
 
 public static class DogExtensions
 {
