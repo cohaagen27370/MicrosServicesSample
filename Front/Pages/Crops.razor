@@ -54,7 +54,8 @@
     
     async Task Modify(CropDto crop)
     {
-        this.seedSelected = this.seeds!.Single(s => s.Id == crop.SeedId);
+        if (crop.Id.HasValue)
+            this.seedSelected = this.seeds!.Single(s => s.Id == crop.SeedId);
         
         var result = await DialogService.OpenAsync("Modify a crop", ds =>
             @<RadzenStack Gap="1.5rem">

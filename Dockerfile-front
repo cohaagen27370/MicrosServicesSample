@@ -5,14 +5,15 @@ WORKDIR /app
 
 # Copie le fichier projet BlazorApp.csproj et le restaure.
 # Cette étape est mise en cache si seul le .csproj change, optimisant les builds.
-COPY CommonDto/CommonDto.csproj ./CommonDto/
+COPY Libraries/CommonDto/CommonDto.csproj ./Libraries/CommonDto/
 COPY Front/Front.csproj ./Front/
 RUN dotnet restore ./Front/Front.csproj
 
 # Copie le reste du code source de l'application BlazorApp
 COPY Front/. ./Front/
-COPY CommonDto/. ./Front/
+COPY Libraries/CommonDto/. ./Front/
 WORKDIR /app/Front
+RUN dotnet restore /app/Front/Front.csproj
 
 # Publie l'application Blazor WebAssembly en mode Release.
 # Le résultat est une collection de fichiers statiques optimisés pour la production.

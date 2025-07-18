@@ -54,10 +54,10 @@ builder.Services.AddGrpcClient<CropService.CropGrpcService.CropGrpcServiceClient
     });
 }).AddInterceptor(() => new HeaderAddingInterceptor(builder.Configuration["Grpc:CropService:Url"]!,"X-Api-Key", builder.Configuration["Grpc:CropService:apikey"]!));
 
-// builder.WebHost.ConfigureKestrel(serverOptions =>
-// {
-//     serverOptions.ListenAnyIP(7181);
-// });
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5023);
+});
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
@@ -82,11 +82,11 @@ builder.Services.AddScoped<ICropRepository, CropRepository>();
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseCors(); 
 
