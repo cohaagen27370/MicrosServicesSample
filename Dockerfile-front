@@ -1,0 +1,47 @@
+# Étape 1: Build de l'application Blazor WebAssembly
+# Utilise l'image du SDK .NET pour compiler l'application
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Copie le fichier projet BlazorApp.csproj et le restaure.
+# Cette étape est mise en cache si seul le .csproj change, optimisant les builds.
+COPY CommonDto/CommonDto.csproj ./CommonDto/
+COPY Front/Front.csproj ./Front/
+RUN dotnet restore ./Front/Front.csproj
+
+# Copie le reste du code source de l'application BlazorApp
+COPY Front/. ./Front/
+COPY CommonDto/. ./Front/
+WORKDIR /app/Front
+
+# Publie l'application Blazor WebAssembly en mode Release.
+# Le résultat est une collection de fichiers statiques optimisés pour la production.
+RUN dotnet publish "./Front.csproj" -c Release -o /app/publish --no-restore /p:UseAppHost=false
+
+# Étape 2: Servir les fichiers statiques avec Nginx
+# Utilise une image Nginx légère (alpine)
+FROM nginx:alpine AS final
+WORKDIR /usr/share/nginx/html
+
+LABEL author="BLANQUET Laurent"
+LABEL version="1.0"
+LABEL description="Application Blazor WebAssembly servie par Nginx"
+
+# Supprime le contenu HTML par défaut de Nginx
+RUN rm -rf ./*
+
+# Copie les fichiers publiés de l'étape de build vers le répertoire de service de Nginx
+# Les fichiers statiques de Blazor WASM se trouvent dans /app/publish/wwwroot
+COPY --from=build /app/publish/wwwroot .
+
+# Configuration Nginx (facultatif mais recommandé pour Blazor WASM)
+# Crée un fichier de configuration Nginx simple pour la SPA (Single Page Application)
+# Nginx doit rediriger toutes les requêtes non-fichier vers index.html pour le routage côté client
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose le port par défaut de Nginx
+EXPOSE 80
+
+# Commande par défaut pour démarrer Nginx en arrière-plan
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package crop_service;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+enum CropStatus {
+  JUST_SOWN = 0;
+  GROWING = 1;
+  HARVEST_READY = 2;
+  HARVESTED = 3;
+}
+
+message Crop {
+  google.protobuf.StringValue id = 1;
+  google.protobuf.Timestamp startDate = 2;
+  string seedId = 3;
+  CropStatus status = 4;
+  google.protobuf.Timestamp endDate = 5;
+}
+
+message AddCropRequest {
+  Crop crop = 1;
+}
+
+message CropResponse {
+  bool success = 1;
+  google.protobuf.StringValue error = 2;
+  string id = 3;
+}
+
+message UpdateCropRequest {
+  string cropId = 1;
+  Crop crop = 2;
+}
+
+message ListCropsRequest {
+
+}
+
+message ListCropsResponse {
+  repeated Crop crops = 1;
+}
+
+service CropGrpcService {
+  rpc AddCrop (AddCropRequest) returns (CropResponse);
+  rpc UpdateCrop (UpdateCropRequest) returns (CropResponse);
+  rpc ListCrops (ListCropsRequest) returns (ListCropsResponse);
+}

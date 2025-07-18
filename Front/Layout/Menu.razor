@@ -1,0 +1,15 @@
+﻿
+<RadzenSidebar Responsive="false" Style="width: max-content">
+    <RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
+        <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+        <RadzenPanelMenuItem Text="Seeds" Icon="grain" Path="/seeds" />
+        <RadzenPanelMenuItem Text="Crops" Icon="potted_plant" Path="/crops" />
+        <RadzenPanelMenuItem Text="Stocks" Icon="warehouse" Path="/stocks" />
+    </RadzenPanelMenu>
+</RadzenSidebar>
+
+@code {
+    
+    [Parameter] public bool SidebarExpanded { get; set; }
+    
+}

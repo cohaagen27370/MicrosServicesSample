@@ -1,0 +1,6 @@
+@StocksMicroService_HostAddress = http://localhost:5025
+
+GET {{StocksMicroService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

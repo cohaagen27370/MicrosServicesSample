@@ -1,0 +1,123 @@
+﻿@page "/Seeds"
+@using System.Xml.Linq
+@using CommonDto.Models
+@using Front.Services
+@inject DataService DataService
+@inject DialogService DialogService
+
+<h3>Seeds</h3> <RadzenButton Click="@(args => Modify(newSeed))" Icon="add_circle" Text="Add new" ButtonStyle="ButtonStyle.Primary" />
+
+<table>
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Espèce</th>
+        <th>Temps de levée (jours)</th>
+        <th>Temps avant récolte (jours)</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (seeds == null)
+    {
+        <tr><td colspan="4">Chargement...</td></tr>
+    }
+    else
+    {
+        @foreach (SeedDto seed in seeds)
+        {
+    
+            <tr>
+                <td>@seed.Name</td>
+                <td>@seed.Specy</td>
+                <td>@seed.RisingTime</td>
+                <td>@seed.DurationBeforeHarvest</td>
+                <td><RadzenButton Text="Modifier" ButtonStyle="ButtonStyle.Primary" Click=@(args => Modify(seed)) /></td>
+                <td><RadzenButton Text="Supprimer" ButtonStyle="ButtonStyle.Danger" Click=@(args => ConfirmSuppression(seed.Id)) /></td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+
+@code {
+    
+    IEnumerable<SeedDto>? seeds = null;
+    SeedDto newSeed = new SeedDto() { Category = new CategoryDto() };
+
+    string seedId = string.Empty;
+    
+    async Task Modify(SeedDto seed)
+    {
+        var result = await DialogService.OpenAsync("Modify a seed", ds =>
+            @<RadzenStack Gap="1.5rem">
+                <RadzenRow Gap="1rem">
+                    <RadzenColumn Size="12" SizeSM="12">
+                        <RadzenStack>
+                            <RadzenFormField Text="Id" Variant="Variant.Filled" Visible="false">
+                                <RadzenTextBox @bind-Value="@seedId" />
+                            </RadzenFormField>                            
+                            <RadzenFormField Text="Name" Variant="Variant.Filled">
+                                <RadzenTextBox @bind-Value="@seed.Name"/>
+                            </RadzenFormField>
+                            <RadzenFormField Text="Specy" Variant="Variant.Filled">
+                                <RadzenTextBox @bind-Value="@seed.Specy"/>
+                            </RadzenFormField>
+                            <RadzenFormField Text="Rising time" Variant="Variant.Filled">
+                                <RadzenNumeric @bind-Value="@seed.RisingTime"/>
+                            </RadzenFormField>
+                            <RadzenFormField Text="Duration before harvest" Variant="Variant.Filled">
+                                <RadzenNumeric @bind-Value="@seed.DurationBeforeHarvest"/>
+                            </RadzenFormField>
+                            <RadzenFormField Text="Category" Variant="Variant.Filled">
+                                <RadzenRadioButtonList @bind-Value="@seed.Category.Id" TValue="int" class="rz-m-4 rz-mt-8">
+                                    <Items>
+                                        <RadzenRadioButtonListItem Text="Légume feuille" Value="1"/>
+                                        <RadzenRadioButtonListItem Text="Légume fruit" Value="2"/>
+                                        <RadzenRadioButtonListItem Text="Légume racine" Value="3"/>
+                                    </Items>
+                                </RadzenRadioButtonList>
+                            </RadzenFormField>
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
+                
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="Save" Click="@(args => SaveSeed(ds, seed, seed.Id))" Style="width: 80px;" />
+                        <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>);
+    }
+    
+    
+    async Task ConfirmSuppression(Guid? seedId)
+    {
+        bool? result = await DialogService.Confirm("Etes-vous sûr ?", "Suppression d'un type de graine", new ConfirmOptions() { OkButtonText = "Oui", CancelButtonText = "Non" });
+        if (result.HasValue && result.Value)
+        {
+            await DataService.DeleteSeed(seedId);
+            seeds = await DataService.GetAllSeeds();
+        }
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        seeds = await DataService.GetAllSeeds();
+    }
+
+    private async Task SaveSeed(DialogService ds, SeedDto newUpdateSeed, Guid? id)
+    {
+        newUpdateSeed.Id = id;
+        
+        await DataService.ModifySeed(newUpdateSeed);
+        ds.Close(true);
+        seeds = await DataService.GetAllSeeds();
+    }
+}
+

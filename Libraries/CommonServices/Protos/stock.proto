@@ -1,0 +1,51 @@
+﻿syntax = "proto3";
+
+package stock_service;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+enum StockStatus {
+  EXHAUSTED = 0;
+  ALMOST_EMPTY = 1;
+  HALF = 2;
+  STARTED = 3;
+  FULL = 4;
+}
+
+message Stock {
+  google.protobuf.StringValue id = 1;
+  google.protobuf.Timestamp buyingDate = 2;
+  string seedId = 3;
+  StockStatus status = 4;
+  google.protobuf.Timestamp lastUseDate = 5;
+}
+
+message AddStockRequest {
+  Stock stock = 1;
+}
+
+message StockResponse {
+  bool success = 1;
+  google.protobuf.StringValue error = 2;
+  string id = 3;
+}
+
+message UpdateStockRequest {
+  string stockId = 1;
+  Stock stock = 2;
+}
+
+message ListStocksRequest {
+
+}
+
+message ListStocksResponse {
+  repeated Stock stocks = 1;
+}
+
+service StockGrpcService {
+  rpc AddStock (AddStockRequest) returns (StockResponse);
+  rpc UpdateStock (UpdateStockRequest) returns (StockResponse);
+  rpc ListStocks (ListStocksRequest) returns (ListStocksResponse);
+}

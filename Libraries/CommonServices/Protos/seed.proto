@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package seed_service;
+
+import "google/protobuf/wrappers.proto";
+
+message Seed {
+  google.protobuf.StringValue id = 1;
+  string name = 2;
+  string specy = 3;
+  int32 risingTime = 4;
+  int32 durationBeforeHarvest = 5;
+  string picture = 6;
+  int32 categoryId = 7;
+}
+
+message Category {
+  int32 id = 1;
+  string name = 2;
+}
+
+message GetCategoryRequest {
+  int32 id = 1;
+}
+
+message GetCategoryResponse {
+  Category category = 1;
+}
+
+message AddSeedRequest {
+  Seed seed = 1;
+}
+
+message SeedResponse {
+  bool success = 1;
+  google.protobuf.StringValue error = 2;
+  string id = 3;
+}
+
+message UpdateSeedRequest {
+  string id = 1;
+  Seed seed = 2;
+}
+
+message DeleteSeedRequest {
+  string id = 1;
+}
+
+message GetSeedRequest {
+  string id = 1;
+}
+
+message ListSeedsRequest {
+
+}
+
+message ListCategoriesRequest {
+
+}
+
+message OneSeedResponse {
+  Seed seed = 1;
+}
+
+message ListSeedsResponse {
+  repeated Seed seeds = 1;
+}
+
+message ListCategoriesResponse {
+  repeated Category categories = 1;
+}
+
+service SeedGrpcService {
+  rpc AddSeed (AddSeedRequest) returns (SeedResponse);
+  rpc UpdateSeed (UpdateSeedRequest) returns (SeedResponse);
+  rpc DeleteSeed (DeleteSeedRequest) returns (SeedResponse);
+  rpc ListSeeds (ListSeedsRequest) returns (ListSeedsResponse);
+  rpc GetOneSeed (GetSeedRequest) returns (OneSeedResponse);
+  rpc ListCategories (ListCategoriesRequest) returns (ListCategoriesResponse);
+  rpc GetOneCategory (GetCategoryRequest) returns (GetCategoryResponse);
+}
