@@ -101,3 +101,11 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.fullwidth {
+    width: 100%
+}
+
+.center {
+    text-align: center;
+}

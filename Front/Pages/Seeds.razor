@@ -1,5 +1,4 @@
 ﻿@page "/Seeds"
-@using System.Xml.Linq
 @using CommonDto.Models
 @using Front.Services
 @inject DataService DataService
@@ -7,21 +6,21 @@
 
 <h3>Seeds</h3> <RadzenButton Click="@(args => Modify(newSeed))" Icon="add_circle" Text="Add new" ButtonStyle="ButtonStyle.Primary" />
 
-<table>
+<table class="fullwidth">
     <thead>
     <tr>
-        <th>Nom</th>
-        <th>Espèce</th>
-        <th>Temps de levée (jours)</th>
-        <th>Temps avant récolte (jours)</th>
-        <th></th>
-        <th></th>
+        <th class="center">Name</th>
+        <th class="center">Specy</th>
+        <th class="center">Rising time (days)</th>
+        <th class="center">Duration before harvest (days)</th>
+        <th class="center"></th>
+        <th class="center"></th>
     </tr>
     </thead>
     <tbody>
     @if (seeds == null)
     {
-        <tr><td colspan="4">Chargement...</td></tr>
+        <tr><td colspan="4">Loading...</td></tr>
     }
     else
     {
@@ -29,12 +28,12 @@
         {
     
             <tr>
-                <td>@seed.Name</td>
-                <td>@seed.Specy</td>
-                <td>@seed.RisingTime</td>
-                <td>@seed.DurationBeforeHarvest</td>
-                <td><RadzenButton Text="Modifier" ButtonStyle="ButtonStyle.Primary" Click=@(args => Modify(seed)) /></td>
-                <td><RadzenButton Text="Supprimer" ButtonStyle="ButtonStyle.Danger" Click=@(args => ConfirmSuppression(seed.Id)) /></td>
+                <td class="center">@seed.Name</td>
+                <td class="center">@seed.Specy</td>
+                <td class="center">@seed.RisingTime</td>
+                <td class="center">@seed.DurationBeforeHarvest</td>
+                <td class="center"><RadzenButton Text="Modifier" ButtonStyle="ButtonStyle.Primary" Click=@(args => Modify(seed)) /></td>
+                <td class="center"><RadzenButton Text="Supprimer" ButtonStyle="ButtonStyle.Danger" Click=@(args => ConfirmSuppression(seed.Id)) /></td>
             </tr>
         }
     }

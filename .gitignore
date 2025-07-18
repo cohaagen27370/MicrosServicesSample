@@ -21,9 +21,14 @@ Services/Gateway/obj
 
 Services/SeedMicroService/bin
 Services/SeedMicroService/obj
+Services/SeedMicroService/SeedDb.db
+Services/SeedMicroService/SeedDb.db-shm
+Services/SeedMicroService/SeedDb.db-wal
 
 Services/CropMicroService/bin
 Services/CropMicroService/obj
+Services/CropMicroService/CropDb.db
 
 Services/StocksMicroService/bin
 Services/StocksMicroService/obj
+
